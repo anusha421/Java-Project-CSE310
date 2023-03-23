@@ -7,6 +7,9 @@ public class DatabaseConnectivity {
         try{
             con=DriverManager.getConnection("jdbc:mysql://localhost:3306/billing","root","sharma00");
                 Statement stmt = con.createStatement();
-        }catch(Exception e){ System.out.println(e);}
+        }
+        catch(Exception e) {
+            System.out.println(e);
+        }
     }
 }
