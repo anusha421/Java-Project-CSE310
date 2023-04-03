@@ -2,6 +2,7 @@ package bills;
 import javax.swing.*;
 import java.awt.*;
 
+// work in progress
 public class homePage {
     public static void main(String args[]) {
         GUI frame = new GUI();
