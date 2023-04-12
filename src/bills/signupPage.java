@@ -243,7 +243,7 @@ class signupPage extends JFrame implements ActionListener  {
 //            return;
 //        }
 
-        DatabaseConnectivity obj = new DatabaseConnectivity();
+        DatabaseConnectivity obj;
         Statement stmt;
         PreparedStatement pstmt;
 
@@ -313,7 +313,7 @@ class signupPage extends JFrame implements ActionListener  {
 
         // create statement for querying
         try {
-            stmt = obj.con.createStatement();
+            stmt = DatabaseConnectivity.getDatabase().createStatement();
         }
         catch (Exception ex) {
             throw new RuntimeException(ex);
@@ -333,7 +333,7 @@ class signupPage extends JFrame implements ActionListener  {
 
             // add new signup to database
             String sql = "insert into customers(name, username, password, email, phone) values (?, ?, ?, ?, ?)";
-            pstmt = obj.con.prepareStatement(sql);
+            pstmt = DatabaseConnectivity.getDatabase().prepareStatement(sql);
             pstmt.setString (1, nameText);
             pstmt.setString (2, userText);
             pstmt.setString   (3, Arrays.toString(passText));
@@ -344,7 +344,7 @@ class signupPage extends JFrame implements ActionListener  {
             JOptionPane.showMessageDialog(this, "Registration Successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
             clearForm();
 //            homePage redirect = new homePage();
-            obj.con.close();
+            DatabaseConnectivity.getDatabase().close();
         }
         catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Registration Error!", "Error", JOptionPane.ERROR_MESSAGE);

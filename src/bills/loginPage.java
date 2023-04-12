@@ -97,7 +97,6 @@ class loginPage extends JFrame implements ActionListener {
 //            return;
 //        }
 
-        DatabaseConnectivity obj = new DatabaseConnectivity();
         Statement stmt;
 
         // Form validation for username
@@ -116,7 +115,7 @@ class loginPage extends JFrame implements ActionListener {
 
         // create statement for querying
         try {
-            stmt = obj.con.createStatement();
+            stmt = DatabaseConnectivity.getDatabase().createStatement();
         }
         catch (Exception ex) {
             throw new RuntimeException(ex);
@@ -141,7 +140,7 @@ class loginPage extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(this, "Invalid Credentials!", "Error", JOptionPane.ERROR_MESSAGE);
             }
 //            homePage redirect = new homePage();
-            obj.con.close();
+            DatabaseConnectivity.getDatabase().close();
         }
         catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Login Error!", "Error", JOptionPane.ERROR_MESSAGE);
