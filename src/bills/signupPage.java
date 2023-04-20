@@ -6,86 +6,13 @@ import java.awt.event.*;
 import java.sql.*;
 import java.util.Arrays;
 
-//public class signupPage {
-//    public static void main(String args[]) throws SQLException {
-//        signupGUI frame = new signupGUI();
-//    }
-//}
-//
-//class signupGUI extends JFrame implements ActionListener {
-//    Container c;
-//    JLabel label1, label2, label3, label4, label5;
-//    JTextField name, user, email, phone;
-//    JPasswordField pass;
-//    JButton btn, btn1;
-//
-//    signupGUI() {
-//        setTitle("\t\tSignUp Form");
-//        setBounds(500,150,700,500);
-//        setDefaultCloseOperation(EXIT_ON_CLOSE);  //terminate the program when frame is closed
-//        ImageIcon x = new ImageIcon("logo.jpg");
-//        setIconImage(x.getImage());
-//
-//        c = getContentPane();
-//        c.setLayout(null);
-//        c.setBackground(Color.CYAN);
-//
-//        label1 = new JLabel("Name");
-//        label2 = new JLabel("Username");
-//        label3 = new JLabel("Password");
-//        label4 = new JLabel("Email");
-//        label5 = new JLabel("Phone Number");
-//        label1.setBounds(10, 50, 100, 50);
-//        label2.setBounds(10, 100, 100, 50);
-//        label3.setBounds(10, 150, 100, 50);
-//        label4.setBounds(10, 200, 100, 50);
-//        label5.setBounds(10, 250, 100, 50);
-//        c.add(label1);
-//        c.add(label2);
-//        c.add(label3);
-//        c.add(label4);
-//        c.add(label5);
-//
-//        name = new JTextField();
-//        name.setBounds(120, 50, 120, 20);
-//        c.add(name);
-//        user = new JTextField();
-//        user.setBounds(120, 100, 120, 20);
-//        c.add(user);
-//        pass = new JPasswordField();
-//        pass.setBounds(120, 150, 120, 20);
-//        c.add(pass);
-//        email = new JTextField();
-//        email.setBounds(120, 200, 120, 20);
-//        c.add(email);
-//        phone = new JTextField();
-//        phone.setBounds(120, 250, 120, 20);
-//        c.add(phone);
-//
-//        btn = new JButton("Sign Up");
-//        btn.setBounds(50, 300, 80, 20);
-//        c.add(btn);
-//        btn.addActionListener(this); // to take inputs
-//
-//        btn1 = new JButton("Clear Form");
-//        btn1.setBounds(150, 300, 100, 20);
-//        c.add(btn1);
-//        btn1.addActionListener(this); // to clear input fields
-//
-//        setVisible(true);
-//    }
-//
-//
-//}
 class signupPage extends JFrame implements ActionListener  {
     JLabel label1, label2, label3, label4, label5;
-    JTextField Name;
-    JTextField username;
+    JTextField Name, username, email, phone_no;
     JPasswordField password;
-    JTextField email;
-    JTextField phone_no;
+    JButton signup_btn, clear_btn, login_btn;
 
-    signupPage(){
+    void signupFrame(){
         //header
         JPanel header;
         header=new JPanel();
@@ -95,8 +22,8 @@ class signupPage extends JFrame implements ActionListener  {
         name.setBounds(200,50,400,50);
 
         //font
-        Font f= new Font("Algerian ",Font.BOLD, 50);
-        name.setForeground(Color.BLACK);
+        Font f = new Font("Times New Roman ",Font.BOLD, 50);
+        name.setForeground(Color.WHITE);
         name.setFont(f);
         header.add(name);
 
@@ -104,46 +31,46 @@ class signupPage extends JFrame implements ActionListener  {
         JPanel signup =new JPanel();
         signup.setLayout(null);
         setSize(1370,730);
-        signup.setBounds(370,100,630,600);
-        signup.setBackground(new Color(0,0,0,200));
+        signup.setBounds(370,125,630,500);
+        signup.setBackground(new Color(0,0,0,100));
 
 
         JLabel n= new JLabel("Name");
-        n.setBounds(50,50,400,50);
+        n.setBounds(50,50,400,25);
         //font for labels
-        Font F= new Font("Algerian ",Font.BOLD, 35);
+        Font F= new Font("Algerian",Font.BOLD, 25);
         n.setForeground(Color.CYAN);
         n.setFont(F);
         signup.add(n);
 
         JLabel u= new JLabel("Username");
-        u.setBounds(50,150,400,50);
+        u.setBounds(50,100,400,25);
         //font for labels
-        Font F2= new Font("Algerian ",Font.BOLD, 35);
+        Font F2= new Font("Algerian",Font.BOLD, 25);
         u.setForeground(Color.CYAN);
         u.setFont(F2);
         signup.add(u);
 
         JLabel p= new JLabel("Password");
-        p.setBounds(50,250,400,50);
+        p.setBounds(50,150,400,25);
         //font for labels
-        Font F3= new Font("Algerian ",Font.BOLD, 35);
+        Font F3= new Font("Algerian",Font.BOLD, 25);
         p.setForeground(Color.CYAN);
         p.setFont(F3);
         signup.add(p);
 
         JLabel e= new JLabel("Email");
-        e.setBounds(50,350,400,50);
+        e.setBounds(50,200,400,25);
         //font for labels
-        Font F4= new Font("Algerian ",Font.BOLD, 35);
+        Font F4= new Font("Algerian",Font.BOLD, 25);
         e.setForeground(Color.CYAN);
         e.setFont(F4);
         signup.add(e);
 
         JLabel ph= new JLabel("Phone No.");
-        ph.setBounds(50,450,400,50);
+        ph.setBounds(50,250,400,25);
         //font for labels
-        Font F5= new Font("Algerian ",Font.BOLD, 35);
+        Font F5= new Font("Algerian",Font.BOLD, 25);
         ph.setForeground(Color.CYAN);
         ph.setFont(F5);
         signup.add(ph);
@@ -153,68 +80,85 @@ class signupPage extends JFrame implements ActionListener  {
         label3 = new JLabel("Enter Password");
         label4 = new JLabel("Enter Email ID");
         label5 = new JLabel("Enter Phone No");
-        label1.setBounds(320, 50, 100, 50);
-        label2.setBounds(320, 150, 100, 50);
-        label3.setBounds(320, 250, 100, 50);
-        label4.setBounds(320, 350, 100, 50);
-        label5.setBounds(320, 450, 100, 50);
+        label1.setBounds(320, 50, 100, 25);
+        label2.setBounds(320, 100, 100, 25);
+        label3.setBounds(320, 150, 100, 25);
+        label4.setBounds(320, 200, 100, 25);
+        label5.setBounds(320, 250, 100, 25);
         signup.add(label1);
         signup.add(label2);
         signup.add(label3);
         signup.add(label4);
         signup.add(label5);
 
+        Font f1= new Font("Times New Roman",Font.BOLD, 20);
 
         Name=new JTextField();
-        Name.setBounds(250,50,300,50);
-        Font f1= new Font("Times New Roman",Font.BOLD, 20);
+        Name.setBounds(250,50,300,25);
         Name.setForeground(Color.BLACK);
         Name.setFont(f1);
         Name.setBackground(new Color(210,180,140));
         signup.add(Name);
 
         username=new JTextField();
-        username.setBounds(250,150,300,50);
-        Font f2= new Font("Times New Roman",Font.BOLD, 20);
+        username.setBounds(250,100,300,25);
         username.setForeground(Color.BLACK);
-        username.setFont(f2);
+        username.setFont(f1);
         username.setBackground(new Color(210,180,140));
         signup.add(username);
 
         password=new JPasswordField();
         password.setBackground(new Color(210,180,140));
         password.setForeground(Color.BLACK);
-        password.setBounds(250,250,300,50);
+        password.setBounds(250,150,300,25);
         signup.add(password);
 
         email=new JTextField();
-        email.setBounds(250,350,300,50);
-        Font f3= new Font("Times New Roman",Font.BOLD, 20);
+        email.setBounds(250,200,300,25);
         email.setForeground(Color.BLACK);
-        email.setFont(f3);
+        email.setFont(f1);
         email.setBackground(new Color(210,180,140));
         signup.add(email);
 
         phone_no=new JTextField();
-        phone_no.setBounds(250,450,300,50);
-        Font f4= new Font("Times New Roman",Font.BOLD, 20);
+        phone_no.setBounds(250,250,300,25);
         phone_no.setForeground(Color.BLACK);
-        phone_no.setFont(f4);
+        phone_no.setFont(f1);
         phone_no.setBackground(new Color(210,180,140));
         signup.add(phone_no);
 
         //Button
-        JButton signup_btn= new JButton("Signup");
-        signup_btn.setBounds(270,530,100,50);
+        signup_btn= new JButton("Signup");
+        signup_btn.setFont(f1);
+        signup_btn.setBounds(270,300,100,35);
         signup_btn.setBackground(new Color(160,182,45));
         signup.add(signup_btn);
-        signup_btn.addActionListener(this); // to show inputs in command prompt
+        signup_btn.addActionListener(this);
 
+        clear_btn= new JButton("Clear Form");
+        clear_btn.setFont(f1);
+        clear_btn.setBounds(270,350,100,35);
+        clear_btn.setBackground(new Color(160,182,45));
+        signup.add(clear_btn);
+        clear_btn.addActionListener(this);
 
+        JLabel log = new JLabel("Already Registered? Login here.");
+        log.setFont(f1);
+        log.setForeground(new Color(229, 190, 236));
+        log.setBounds(190, 410, 300, 25);
+        signup.add(log);
+
+        login_btn = new JButton("Login");
+        login_btn.setFont(f1);
+        login_btn.setBounds(270,450,100,35);
+        login_btn.setBackground(new Color(160,182,45));
+        signup.add(login_btn);
+        login_btn.addActionListener(this);
 
 
         //frame
         setSize(1370,730);
+        setLocationRelativeTo(null);
         setLayout(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false); // fix the size
@@ -237,11 +181,16 @@ class signupPage extends JFrame implements ActionListener  {
     }
 
     public void actionPerformed(ActionEvent e) {
-        Object o = e.getSource();
-//        if(o == btn1) {
-//            clearForm();
-//            return;
-//        }
+        if(e.getSource() == clear_btn) {
+            clearForm();
+            return;
+        }
+
+        if(e.getSource() == login_btn) {
+            setVisible(false);
+            new loginPage().loginFrame();
+            return;
+        }
 
         DatabaseConnectivity obj;
         Statement stmt;
@@ -343,7 +292,8 @@ class signupPage extends JFrame implements ActionListener  {
 
             JOptionPane.showMessageDialog(this, "Registration Successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
             clearForm();
-//            homePage redirect = new homePage();
+            setVisible(false);
+            homePage redirect = new homePage();
             DatabaseConnectivity.getDatabase().close();
         }
         catch (Exception ex) {
@@ -361,15 +311,8 @@ class signupPage extends JFrame implements ActionListener  {
         phone_no.setText("");
     }
 
-
-
-
-
-}
-
-class Signup {
     public static void main (String [] args)
     {
-        signupPage obj = new signupPage();
+        new signupPage().signupFrame();
     }
 }

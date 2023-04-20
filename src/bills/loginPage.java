@@ -9,39 +9,50 @@ import java.util.Arrays;
 
 class loginPage extends JFrame implements ActionListener {
     JLabel background;
-    JPanel login,header;
+    JPanel login, header;
     JTextField username;
     JPasswordField password;
-    JButton signup;
-    JButton login_btn;
+    JButton signup, login_btn, clear_btn;
 
-    loginPage()
+    void loginFrame()
     {
         //header
-        JPanel header;
         header = new JPanel();
         header.setBackground(new Color(0,0,0,25));// upper transparency
         header.setBounds(0,0,1370,100);
         JLabel name = new JLabel("Login");
         name.setBounds(200,50,400,50);
         //font
-        Font f = new Font("Algerian",Font.BOLD, 50);
-        name.setForeground(Color.BLACK);
+        Font f = new Font("Times New Roman",Font.BOLD, 50);
+        name.setForeground(Color.WHITE);
         name.setFont(f);
         header.add(name);
 
         //login
-        JPanel login = new JPanel();
+        login = new JPanel();
         login.setLayout(null);
-        setSize(400,350);
-        login.setBounds(480,200,400,350);
-        login.setBackground(Color.BLACK);
+        login.setBounds(400,200,600,450);
+        login.setBackground(new Color(0,0,0,100));
 
+        JLabel u = new JLabel("Username");
+        u.setBounds(50,55,400,25);
+        //font for labels
+        Font F2= new Font("Algerian",Font.BOLD, 25);
+        u.setForeground(Color.CYAN);
+        u.setFont(F2);
+        login.add(u);
 
-        username = new JTextField();
-        username.setBounds(50,50,300,50);
+        JLabel p = new JLabel("Password");
+        p.setBounds(50,155,400,25);
+        //font for labels
+        Font F3= new Font("Algerian",Font.BOLD, 25);
+        p.setForeground(Color.CYAN);
+        p.setFont(F3);
+        login.add(p);
 
         Font f1 = new Font("Times New Roman", Font.BOLD, 20);
+        username = new JTextField();
+        username.setBounds(200,55,300,50);
         username.setForeground(Color.BLACK);
         username.setFont(f1);
         username.setBackground(new Color(210,180,140));
@@ -50,25 +61,41 @@ class loginPage extends JFrame implements ActionListener {
         password = new JPasswordField();
         password.setBackground(new Color(210,180,140));
         password.setForeground(Color.BLACK);
-        password.setBounds(50,150,300,50);
+        password.setBounds(200,155,300,50);
         login.add(password);
 
-        JButton signup= new JButton("Login");
-        signup.setBounds(30,250,100,50);
-        signup.setBackground(new Color(160,182,45));
-        login.add(signup);
-        signup.addActionListener(this);
-
-        JButton login_btn = new JButton("Sign Up");
-        login_btn.setBounds(270,250,100,50);
+        login_btn = new JButton("Login");
+        login_btn.setFont(f1);
+        login_btn.setBounds(160,250,100,50);
         login_btn.setBackground(new Color(160,182,45));
         login.add(login_btn);
         login_btn.addActionListener(this);
 
 
+        clear_btn = new JButton("Clear Form");
+        clear_btn.setFont(f1);
+        clear_btn.setBounds(340,250,150,50);
+        clear_btn.setBackground(new Color(160,182,45));
+        login.add(clear_btn);
+        clear_btn.addActionListener(this);
+
+
+        JLabel sign = new JLabel("Don't have an Account? Register Here.");
+        sign.setFont(f1);
+        sign.setForeground(new Color(229, 190, 236));
+        sign.setBounds(150, 350, 600, 25);
+        login.add(sign);
+
+        signup = new JButton("Sign Up");
+        signup.setFont(f1);
+        signup.setBounds(250,380,120,50);
+        signup.setBackground(new Color(160,182,45));
+        login.add(signup);
+        signup.addActionListener(this);
 
         //frame
         setSize(1370,730);
+        setLocationRelativeTo(null);
         setLayout(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false); // fix the size
@@ -79,7 +106,7 @@ class loginPage extends JFrame implements ActionListener {
         Image img = bg_image.getImage();
         Image temp_img = img.getScaledInstance(1370,730,Image.SCALE_SMOOTH);
         bg_image = new ImageIcon(temp_img);
-        JLabel background = new JLabel("",bg_image,JLabel.CENTER);
+        JLabel background = new JLabel("", bg_image, JLabel.CENTER);
 
         background.add(login);
         background.add(header);
@@ -91,11 +118,16 @@ class loginPage extends JFrame implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e){
-        Object o = e.getSource();
-//        if(o == btn1) {
-//            clearForm();
-//            return;
-//        }
+        if(e.getSource() == signup) {
+            setVisible(false);
+            new signupPage().signupFrame();
+            return;
+        }
+
+        if(e.getSource() == clear_btn) {
+            clearForm();
+            return;
+        }
 
         Statement stmt;
 
@@ -130,6 +162,8 @@ class loginPage extends JFrame implements ActionListener {
                 String password = rs.getString("password");
                 if(username.equals(userText) && password.equals(Arrays.toString(passText))) {
                     JOptionPane.showMessageDialog(this, "Login Successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    setVisible(false);
+                    new homePage().createFrame();
                     flag = 1;
                     clearForm();
                     break;
@@ -139,7 +173,7 @@ class loginPage extends JFrame implements ActionListener {
             if(flag == 0) {
                 JOptionPane.showMessageDialog(this, "Invalid Credentials!", "Error", JOptionPane.ERROR_MESSAGE);
             }
-//            homePage redirect = new homePage();
+
             DatabaseConnectivity.getDatabase().close();
         }
         catch (Exception ex) {
@@ -155,11 +189,7 @@ class loginPage extends JFrame implements ActionListener {
         password.setText("");
     }
 
-}
-
-class LoginForm{
-    public static void main(String[]args)
-    {
-        loginPage obj = new loginPage();
+    public static void main(String[]args) {
+        new loginPage().loginFrame();
     }
 }
