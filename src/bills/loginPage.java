@@ -23,7 +23,7 @@ class loginPage extends JFrame implements ActionListener {
         JLabel name = new JLabel("Login");
         name.setBounds(200,50,400,50);
         //font
-        Font f = new Font("Times New Roman",Font.BOLD, 50);
+        Font f = new Font("Times New Roman", Font.BOLD, 50);
         name.setForeground(Color.WHITE);
         name.setFont(f);
         header.add(name);
@@ -66,8 +66,8 @@ class loginPage extends JFrame implements ActionListener {
 
         login_btn = new JButton("Login");
         login_btn.setFont(f1);
-        login_btn.setBounds(160,250,100,50);
-        login_btn.setBackground(new Color(160,182,45));
+        login_btn.setBounds(160,250,150,50);
+        login_btn.setBackground(new Color(186, 144, 198));
         login.add(login_btn);
         login_btn.addActionListener(this);
 
@@ -75,7 +75,7 @@ class loginPage extends JFrame implements ActionListener {
         clear_btn = new JButton("Clear Form");
         clear_btn.setFont(f1);
         clear_btn.setBounds(340,250,150,50);
-        clear_btn.setBackground(new Color(160,182,45));
+        clear_btn.setBackground(new Color(186, 144, 198));
         login.add(clear_btn);
         clear_btn.addActionListener(this);
 
@@ -89,7 +89,7 @@ class loginPage extends JFrame implements ActionListener {
         signup = new JButton("Sign Up");
         signup.setFont(f1);
         signup.setBounds(250,380,120,50);
-        signup.setBackground(new Color(160,182,45));
+        signup.setBackground(new Color(186, 144, 198));
         login.add(signup);
         signup.addActionListener(this);
 
@@ -119,7 +119,7 @@ class loginPage extends JFrame implements ActionListener {
 
     public void actionPerformed(ActionEvent e){
         if(e.getSource() == signup) {
-            setVisible(false);
+            this.dispose();
             new signupPage().signupFrame();
             return;
         }

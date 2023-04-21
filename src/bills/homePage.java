@@ -58,13 +58,13 @@ public class homePage extends JFrame implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == signup) {
-            setVisible(false);
+            this.dispose();
             new signupPage().signupFrame();
             return;
         }
 
         if (e.getSource() == login) {
-            setVisible(false);
+            this.dispose();
             new loginPage().loginFrame();
         }
     }

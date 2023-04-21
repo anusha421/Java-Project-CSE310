@@ -22,7 +22,7 @@ class signupPage extends JFrame implements ActionListener  {
         name.setBounds(200,50,400,50);
 
         //font
-        Font f = new Font("Times New Roman ",Font.BOLD, 50);
+        Font f = new Font("Times New Roman", Font.BOLD, 50);
         name.setForeground(Color.WHITE);
         name.setFont(f);
         header.add(name);
@@ -131,27 +131,27 @@ class signupPage extends JFrame implements ActionListener  {
         signup_btn= new JButton("Signup");
         signup_btn.setFont(f1);
         signup_btn.setBounds(270,300,100,35);
-        signup_btn.setBackground(new Color(160,182,45));
+        signup_btn.setBackground(new Color(186, 144, 198));
         signup.add(signup_btn);
         signup_btn.addActionListener(this);
 
         clear_btn= new JButton("Clear Form");
         clear_btn.setFont(f1);
         clear_btn.setBounds(270,350,100,35);
-        clear_btn.setBackground(new Color(160,182,45));
+        clear_btn.setBackground(new Color(186, 144, 198));
         signup.add(clear_btn);
         clear_btn.addActionListener(this);
 
         JLabel log = new JLabel("Already Registered? Login here.");
         log.setFont(f1);
-        log.setForeground(new Color(229, 190, 236));
+        log.setForeground(Color.WHITE);
         log.setBounds(190, 410, 300, 25);
         signup.add(log);
 
         login_btn = new JButton("Login");
         login_btn.setFont(f1);
         login_btn.setBounds(270,450,100,35);
-        login_btn.setBackground(new Color(160,182,45));
+        login_btn.setBackground(new Color(186, 144, 198));
         signup.add(login_btn);
         login_btn.addActionListener(this);
 
@@ -187,7 +187,7 @@ class signupPage extends JFrame implements ActionListener  {
         }
 
         if(e.getSource() == login_btn) {
-            setVisible(false);
+            this.dispose();
             new loginPage().loginFrame();
             return;
         }
