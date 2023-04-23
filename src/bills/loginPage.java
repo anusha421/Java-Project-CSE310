@@ -34,25 +34,23 @@ class loginPage extends JFrame implements ActionListener {
         login.setBounds(400,200,600,450);
         login.setBackground(new Color(0,0,0,100));
 
+        Font F2= new Font("Algerian",Font.BOLD, 20);
+
         JLabel u = new JLabel("Username");
-        u.setBounds(50,55,400,25);
-        //font for labels
-        Font F2= new Font("Algerian",Font.BOLD, 25);
+        u.setBounds(50,60,400,25);
         u.setForeground(Color.CYAN);
         u.setFont(F2);
         login.add(u);
 
         JLabel p = new JLabel("Password");
-        p.setBounds(50,155,400,25);
-        //font for labels
-        Font F3= new Font("Algerian",Font.BOLD, 25);
+        p.setBounds(50,160,400,25);
         p.setForeground(Color.CYAN);
-        p.setFont(F3);
+        p.setFont(F2);
         login.add(p);
 
         Font f1 = new Font("Times New Roman", Font.BOLD, 20);
         username = new JTextField();
-        username.setBounds(200,55,300,50);
+        username.setBounds(200,55,300,40);
         username.setForeground(Color.BLACK);
         username.setFont(f1);
         username.setBackground(new Color(210,180,140));
@@ -61,12 +59,12 @@ class loginPage extends JFrame implements ActionListener {
         password = new JPasswordField();
         password.setBackground(new Color(210,180,140));
         password.setForeground(Color.BLACK);
-        password.setBounds(200,155,300,50);
+        password.setBounds(200,155,300,40);
         login.add(password);
 
         login_btn = new JButton("Login");
         login_btn.setFont(f1);
-        login_btn.setBounds(160,250,150,50);
+        login_btn.setBounds(120,250,150,50);
         login_btn.setBackground(new Color(186, 144, 198));
         login.add(login_btn);
         login_btn.addActionListener(this);
@@ -82,13 +80,13 @@ class loginPage extends JFrame implements ActionListener {
 
         JLabel sign = new JLabel("Don't have an Account? Register Here.");
         sign.setFont(f1);
-        sign.setForeground(new Color(229, 190, 236));
-        sign.setBounds(150, 350, 600, 25);
+        sign.setForeground(Color.white);
+        sign.setBounds(140, 350, 600, 25);
         login.add(sign);
 
         signup = new JButton("Sign Up");
         signup.setFont(f1);
-        signup.setBounds(250,380,120,50);
+        signup.setBounds(240,380,120,50);
         signup.setBackground(new Color(186, 144, 198));
         login.add(signup);
         signup.addActionListener(this);
@@ -150,20 +148,22 @@ class loginPage extends JFrame implements ActionListener {
             stmt = DatabaseConnectivity.getDatabase().createStatement();
         }
         catch (Exception ex) {
+            new homePage().createFrame();
             throw new RuntimeException(ex);
         }
 
         try {
             // Check if username already exists
             int flag = 0;
-            ResultSet rs = stmt.executeQuery("select username, password from customers");
+            ResultSet rs = stmt.executeQuery("select * from customers");
             while(rs.next()) {
                 String username = rs.getString("username");
                 String password = rs.getString("password");
                 if(username.equals(userText) && password.equals(Arrays.toString(passText))) {
                     JOptionPane.showMessageDialog(this, "Login Successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                    setVisible(false);
-                    new homePage().createFrame();
+                    this.dispose();
+                    new userPage(rs).userFrame();
+//                    new ShoppingCart().main(Integer.toString(rs.getInt("cust_id")));
                     flag = 1;
                     clearForm();
                     break;
@@ -177,9 +177,10 @@ class loginPage extends JFrame implements ActionListener {
             DatabaseConnectivity.getDatabase().close();
         }
         catch (Exception ex) {
+            System.out.print(ex);
             JOptionPane.showMessageDialog(this, "Login Error!", "Error", JOptionPane.ERROR_MESSAGE);
             clearForm();
-            return;
+            this.dispose();
         }
     }
 

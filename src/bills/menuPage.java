@@ -1,22 +1,28 @@
 package bills;
 
-import java.awt.geom.Line2D;
+import java.sql.*;
 import java.util.*;
 import java.text.SimpleDateFormat;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Date;
 import javax.swing.*;
 import javax.swing.table.*;
 import javax.swing.event.*;
-import javax.swing.table.*;
 
-class OnlineShoppingCart {
-    public static void main(String[] args) {
-        ProductDB productDB = new ProductDB();
-        ProductItemGUI productItemGUI = new ProductItemGUI();
-        CartItem cart = new CartItem();
-        ProductItemController  productItemController = new ProductItemController(productItemGUI,productDB,cart);
-        productItemGUI.setVisible(true);
+class ShoppingCart {
+    public static void main(String... args) {
+        try {
+            CartItem cart = new CartItem(Integer.parseInt(args[0]));
+            ProductDB productDB = new ProductDB();
+            ProductItemGUI productItemGUI = new ProductItemGUI();
+            ProductItemController  productItemController = new ProductItemController(productItemGUI,productDB,cart);
+            productItemGUI.setVisible(true);
+        }
+        catch(ArrayIndexOutOfBoundsException e) {
+            JOptionPane.showMessageDialog(null, "Login to continue Shopping!", "Error", JOptionPane.ERROR_MESSAGE );
+            new loginPage().loginFrame();
+        }
     }
 }
 
@@ -26,10 +32,10 @@ class ProductItemGUI extends JFrame {
     private JList<String> list;
     private JScrollPane scrollPane,scrollPane2;
     private JComboBox<String> callNum;
-    private JButton add,checkout,remove,clear,exit;
+    private JButton add,checkout,remove,clear,exit,profile;
     private JTable table;
     private DefaultTableModel defaultModel;
-    private JPanel panel,panel2;
+    private JPanel panel;
 
     public ProductItemGUI() {
         setTitle("Shopping Cart");
@@ -43,7 +49,7 @@ class ProductItemGUI extends JFrame {
 
         JPanel header;
         header=new JPanel();
-        header.setBackground(new Color(0,0,0,25));// upper transparency
+        header.setBackground(new Color(0,0,0,25)); //upper transparency
         header.setBounds(0,0,1370,100);
         JLabel name= new JLabel("Menu");
         name.setBounds(200,50,400,50);
@@ -83,7 +89,7 @@ class ProductItemGUI extends JFrame {
         cartItem.setFont(font1);
         totalPrice = new JLabel();
         String[][] productInfo = new String[0][2];
-        String[] names = {"Product","Quantity"};
+        String[] names = {"Product", "Quantity"};
         defaultModel = new DefaultTableModel(productInfo, names){
             public boolean isCellEditable(int row,int col){
                 return false;
@@ -113,21 +119,23 @@ class ProductItemGUI extends JFrame {
         setSize(1370,730);
         panel.setBounds(370,125,630,500);
         panel.setBackground(new Color(0,0,0,100));
+        profile = new JButton("<< Go to Profile");
 
         pmenu.setBounds(95,20,200,20);
         scrollPane.setBounds(25,70,250,250);
-        qStock.setBounds(50,325,100,20);
+        qStock.setBounds(50,325,250,20);
         price.setBounds(150,325,100,20);
         num.setBounds(50,375,150,20);
-        callNum.setBounds(200,375,75,20);
+        callNum.setBounds(190,375,75,20);
         add.setBounds(70,450,140,30);
         cartItem.setBounds(425,20,200,20);
         scrollPane2.setBounds(350,70,250,250);
         remove.setBounds(350,330,125,30);
         clear.setBounds(475,330,125,30);
-        totalPrice.setBounds(500,370,100,20);
+        totalPrice.setBounds(460,370,200,20);
         checkout.setBounds(450,450,120,30);
         exit.setBounds(380,450,60,30);
+        profile.setBounds(525, 650, 300, 30);
 
         panel.add(pmenu);
         panel.add(pmenu);
@@ -155,6 +163,7 @@ class ProductItemGUI extends JFrame {
         background.setBounds(0,0,1370,730);
         background.add(header);
         background.add(panel);
+        background.add(profile);
         add(background);
 
         setVisible(true);
@@ -182,6 +191,10 @@ class ProductItemGUI extends JFrame {
 
     public void addExitListener(ActionListener listener){
         exit.addActionListener(listener);
+    }
+
+    public void addProfileListener(ActionListener listener){
+        profile.addActionListener(listener);
     }
 
     public void addListElement(String s){
@@ -283,7 +296,7 @@ class CheckoutGUI extends JFrame{
         jTA.setBorder(BorderFactory.createTitledBorder("Order Detail"));
         wJLabel = new JLabel("");
         show = new JButton("Show");
-        shop = new JButton("Shopping Again  ^_^");
+        shop = new JButton("Shop Again");
         exit = new JButton("OK");
 
         scrollPane.setBounds(5,10,280,300);
@@ -341,6 +354,7 @@ class ProductItemController {
         this.productItemGUI.addRemoveListener(new RemoveListener());
         this.productItemGUI.addClearListener(new ClearListener());
         this.productItemGUI.addExitListener(new ExitListener());
+        this.productItemGUI.addProfileListener(new ProfileListener());
         addListElement();
     }
 
@@ -354,7 +368,7 @@ class ProductItemController {
             if(cart.calculateTotalPrice() == 0){
                 productItemGUI.setQStock("Cart is empty...");
                 productItemGUI.setPrice("");
-            }else{
+            } else {
                 CheckoutGUI checkoutGUI = new CheckoutGUI();
                 CheckoutController checkoutController = new CheckoutController(checkoutGUI,productDB,cart);
                 productItemGUI.close();
@@ -369,9 +383,9 @@ class ProductItemController {
             Product p = productDB.getProduct(productItemGUI.getListValue());
             s = p.getProductStock();
 
-            if(s==0){
+            if(s == 0){
                 productItemGUI.setQStock("Choose Product!!");
-            }else{
+            } else {
                 productItemGUI.setQStock("Stock : " + s);
             }
             productItemGUI.setPrice("Price : $" + p.getPrice());
@@ -382,26 +396,26 @@ class ProductItemController {
         public void actionPerformed(ActionEvent e) {
             Product p = productDB.getProduct(productItemGUI.getListValue());
             int s = p.getProductStock();
-            int id=0;
-            if(s!=0){
+            int id = 0;
+            if(s != 0){
                 if(s > productItemGUI.getCallNum()){
                     productDB.updateStock(p,productItemGUI.getCallNum());
                     int qty = productItemGUI.getCallNum();
-                    id=cart.addProduct(p,qty);
-                }else{
+                    id = cart.addProduct(p,qty);
+                } else {
                     productDB.updateStock(p,s);
                     int qty = s;
-                    id=cart.addProduct(p,qty);
+                    id = cart.addProduct(p,qty);
                 }
             }
 
             int ss = p.getProductStock();
-            if(s<=0){
+            if(s <= 0){
                 productItemGUI.setQStock("Choose Product!!");
-            }else{
-                if (id<0){
+            } else {
+                if (id < 0) {
                     productItemGUI.addRow(p);
-                }else{
+                } else {
                     productItemGUI.setRow(id, p);
                 }
                 productItemGUI.setQStock("Stock : " + ss);
@@ -412,7 +426,7 @@ class ProductItemController {
     }
 
     class RemoveListener implements ActionListener {
-        public void actionPerformed(ActionEvent e){
+        public void actionPerformed(ActionEvent e) {
             int r =-1;
             int c =-1;
 
@@ -425,22 +439,22 @@ class ProductItemController {
 
                     int s = p.getProductStock();
 
-                    if(productItemGUI.getListValue() == p.getProductName()){
+                    if(productItemGUI.getListValue() == p.getProductName()) {
                         productItemGUI.setQStock("Stock : " + s);
                     }
 
                     productItemGUI.setTotalPrice("Total Price: " + cart.calculateTotalPrice());
-                    if(productItemGUI.getTableRow()==0){
+                    if(productItemGUI.getTableRow() == 0) {
                         productItemGUI.setTotalPrice("");
                     }
                 }
                 productItemGUI.defaultModelRemoveRow();
-            }else{
+            } else {
                 if(productItemGUI.getTableIsNull()){
                     productItemGUI.setQStock("");
                     productItemGUI.setPrice("");
-                    productItemGUI.setTotalPrice("Cart is null...");
-                }else{
+                    productItemGUI.setTotalPrice("Cart is empty...");
+                } else {
                     productItemGUI.setTotalPrice("Select the items.");
                 }
             }
@@ -456,10 +470,27 @@ class ProductItemController {
             productItemGUI.setTotalPrice("");
         }
     }
+
+    class ProfileListener implements ActionListener {
+        public  void actionPerformed(ActionEvent e) {
+            Statement stmt;
+            ResultSet rs;
+            try {
+                stmt = DatabaseConnectivity.getDatabase().createStatement();
+                rs = stmt.executeQuery("select * from customers where cust_id = " + cart.cust_id);
+                rs.next();
+                productItemGUI.close();
+                new userPage(rs).userFrame();
+            }
+            catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+    }
     class ExitListener implements ActionListener{
-        public void actionPerformed(ActionEvent e){
+        public void actionPerformed(ActionEvent e) {
             productItemGUI.close();
-            JOptionPane.showMessageDialog(null, "Thank you, we hope to see you next time.", "Msg", JOptionPane.INFORMATION_MESSAGE );
+            JOptionPane.showMessageDialog(null, "Thank you, we hope to see you next time.", "Message", JOptionPane.INFORMATION_MESSAGE );
             new homePage().createFrame();
         }
     }
@@ -469,34 +500,37 @@ class CheckoutController {
     private CheckoutGUI checkoutGUI;
     private CartItem cart;
     private ProductDB productDB;
+    int cust_id;
 
-    public CheckoutController(CheckoutGUI checkoutGUI,ProductDB productDB,CartItem cart){
+    public CheckoutController(CheckoutGUI checkoutGUI,ProductDB productDB,CartItem cart) {
         this.checkoutGUI = checkoutGUI;
         this.productDB = productDB;
         this.cart = cart;
         this.checkoutGUI.addExitListener(new ExitListener());
         this.checkoutGUI.addShopListener(new ShopListener());
         this.checkoutGUI.addShowListener(new ShowListener());
+        this.cust_id = cart.cust_id;
     }
 
-    class ExitListener implements ActionListener{
-        public void actionPerformed(ActionEvent e){
+    class ExitListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
             checkoutGUI.close();
-            JOptionPane.showMessageDialog(null, "Happy shopping!", "Msg", JOptionPane.INFORMATION_MESSAGE );
+            JOptionPane.showMessageDialog(null, "Happy shopping!", "Message", JOptionPane.INFORMATION_MESSAGE );
+            new homePage().createFrame();
         }
     }
 
-    class ShopListener implements ActionListener{
-        public void actionPerformed(ActionEvent e){
+    class ShopListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
             ProductItemGUI productItemGUI = new ProductItemGUI();
-            ProductItemController  productItemController = new ProductItemController(productItemGUI,productDB,new CartItem());
+            ProductItemController  productItemController = new ProductItemController(productItemGUI,productDB,new CartItem(cust_id));
             checkoutGUI.close();
             productItemGUI.setVisible(true);
         }
     }
 
-    class ShowListener implements ActionListener{
-        public void actionPerformed(ActionEvent e){
+    class ShowListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
             checkoutGUI.showDetail(cart.getAllDetail());
             checkoutGUI.showCalculateTotalPrice("Total Price : $" + cart.calculateTotalPrice());
         }
@@ -506,7 +540,7 @@ class CheckoutController {
 class ProductDB {
     ArrayList<Product> productList = new ArrayList<>();
 
-    public ProductDB(){
+    public ProductDB() {
         productList.add(new Product("Apple",100,100));
         productList.add(new Product("Avocado",100,70));
         productList.add(new Product("Banana",100,20));
@@ -542,11 +576,11 @@ class ProductDB {
         return a;
     }
 
-    public void updateStock(Product p,int quantity){
+    public void updateStock(Product p, int quantity){
         p.updateStock(quantity);
         for(Product pp : productList){
             if(p.getProductName() == pp.getProductName()){
-                pp=p;
+                pp = p;
             }
         }
     }
@@ -578,7 +612,7 @@ class Product {
     }
 
     public void setSell(int q){
-        sell=q;
+        sell = q;
     }
 
     public int getSell(){
@@ -592,14 +626,14 @@ class Product {
     public void updateStock(int quantity){
         stock -= quantity;
         thissell = quantity;
-        sell+=quantity;
+        sell += quantity;
     }
     public int calculatePrice(){
         return sell*price;
     }
 }
 
-class Item{
+class Item {
     private Product product;
     private int qty=0;
     public Item(Product product){
@@ -627,6 +661,13 @@ class CartItem {
     SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
     Date date = new Date();
     String strDate = "Date: " + sdFormat.format(date);
+    int cust_id;
+    Statement stmt;
+    PreparedStatement pstmt;
+
+    CartItem(int cust_id) {
+        this.cust_id = cust_id;
+    }
 
     public void setCartNull(){
         cItem = null;
@@ -634,68 +675,101 @@ class CartItem {
 
     public int addProduct(Product p,int qty){
         System.out.println(p.getProductName());
-        Item newitem=null;
-        int id=-1;
-        int rid=-1;
-        for (Item i:cItem){
+        Item newitem = null;
+        int id = -1;
+        int rid = -1;
+        for (Item i : cItem){
             id++;
-            if (i.getProduc()==p){
-                rid=id;
-                newitem=i;
+            if (i.getProduc() == p) {
+                rid = id;
+                newitem = i;
                 break;
             }
         }
 
-        if (newitem==null){
-            rid=-1;
-            newitem=new Item(p);
+        if (newitem == null){
+            rid = -1;
+            newitem = new Item(p);
             cItem.add(newitem);
         }
+
         newitem.addqty(qty);
-        System.out.println("ID: "+ id);
+        System.out.println("ID: " + id);
         p.setSell(newitem.getsellqty());
-        System.out.println("cItem number: "+cItem.size());
-        System.out.println("this sell: "+newitem.getProduc().getSell());
+        System.out.println("cItem number: " + cItem.size());
+        System.out.println("this sell: " + newitem.getProduc().getSell());
         System.out.println(calculateTotalPrice());
         return rid;
     }
 
     public void removeProduct(int id){
-        Item i=cItem.get(id);
+        Item i = cItem.get(id);
         i.remove();
-        i=null;
+        i = null;
         cItem.remove(id);
     }
-    public void clearAll(){
-        for (Item i:cItem){
+    public void clearAll() {
+        for (Item i : cItem) {
             i.remove();
-            i=null;
+            i = null;
         }
         cItem.removeAll(cItem);
     }
-    public int calculateTotalPrice(){
-        int all=0;
+    public int calculateTotalPrice() {
+        int all = 0;
         for(Item p : cItem){
             all += p.getProduc().calculatePrice();
         }
         return all;
     }
 
-    public String getAllDetail(){
+    public String getAllDetail() {
         String str = "";
+        String items = "";
+        int quantity = 0;
+        int cost = 0;
 
-        for(Item i : cItem){
-            Product p=i.getProduc();
-            System.out.println(p);
+        for(Item i : cItem) {
+            System.out.print(cItem);
+            Product p = i.getProduc();
             String a = p.getProductName();
             String b = String.valueOf(i.getsellqty());
             String c = String.valueOf(p.getPrice());
-            System.out.println(a+" "+b+" "+c);
+
+            items += a + ",";
+            quantity += Integer.parseInt(b);
+            cost += Integer.parseInt(c);
+            System.out.println(a + " " + b + " " + c);
+
             str += "Product: " + a + "/ Quantity: " + b + "/ Price: " + c;
-            //return a+" "+b+" "+c;
             str += "\n";
         }
         str = "NO." + no + "\n" + strDate + "\n" + str;
+
+        try {
+            stmt = DatabaseConnectivity.getDatabase().createStatement();
+        }
+        catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Billing Error!", "Error", JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+
+        try {
+            // add new signup to database
+            String sql = "insert into bills(cust, items, quantity, cost, timestamp) values (?, ?, ?, ?, ?)";
+            pstmt = DatabaseConnectivity.getDatabase().prepareStatement(sql);
+            pstmt.setInt (1, cust_id);
+            pstmt.setString (2, items);
+            pstmt.setInt   (3, quantity);
+            pstmt.setInt(4, cost);
+            pstmt.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
+            pstmt.execute();
+            DatabaseConnectivity.getDatabase().close();
+        }
+        catch (Exception ex) {
+            return null;
+        }
+
         return str;
     }
 }

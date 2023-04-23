@@ -137,7 +137,7 @@ class signupPage extends JFrame implements ActionListener  {
 
         clear_btn= new JButton("Clear Form");
         clear_btn.setFont(f1);
-        clear_btn.setBounds(270,350,100,35);
+        clear_btn.setBounds(245,350,150,35);
         clear_btn.setBackground(new Color(186, 144, 198));
         signup.add(clear_btn);
         clear_btn.addActionListener(this);
@@ -192,7 +192,6 @@ class signupPage extends JFrame implements ActionListener  {
             return;
         }
 
-        DatabaseConnectivity obj;
         Statement stmt;
         PreparedStatement pstmt;
 
@@ -273,7 +272,7 @@ class signupPage extends JFrame implements ActionListener  {
             ResultSet rs = stmt.executeQuery("select username from customers");
             while(rs.next()) {
                 String username = rs.getString("username");
-                if(username.equals(username.toString())) {
+                if(username.equals(userText)) {
                     JOptionPane.showMessageDialog(this, "This username already exists!", "Error", JOptionPane.ERROR_MESSAGE);
                     clearForm();
                     return;
@@ -293,7 +292,10 @@ class signupPage extends JFrame implements ActionListener  {
             JOptionPane.showMessageDialog(this, "Registration Successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
             clearForm();
             setVisible(false);
-            homePage redirect = new homePage();
+
+            ResultSet rs2 = stmt.executeQuery("select * from customers where username = ?" + username);
+
+            new userPage(rs2).userFrame();
             DatabaseConnectivity.getDatabase().close();
         }
         catch (Exception ex) {

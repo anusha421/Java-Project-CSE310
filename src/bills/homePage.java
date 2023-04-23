@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 
 // work in progress
 public class homePage extends JFrame implements ActionListener {
-    JButton signup, login;
+    JButton signup, login, exit;
     void createFrame() {
         JPanel header = new JPanel();
         header.setBounds(0, 0, 1370, 100);
@@ -34,6 +34,14 @@ public class homePage extends JFrame implements ActionListener {
         login.setBackground(new Color(145, 127, 179));
         add(login);
         login.addActionListener(this);
+
+        exit = new JButton("Exit");
+        exit.setFont(f);
+        exit.setForeground(Color.WHITE);
+        exit.setBounds(490, 500, 400, 100);
+        exit.setBackground(new Color(145, 127, 179));
+        add(exit);
+        exit.addActionListener(this);
 
         setSize(1370,730);
         setLocationRelativeTo(null);
@@ -66,6 +74,10 @@ public class homePage extends JFrame implements ActionListener {
         if (e.getSource() == login) {
             this.dispose();
             new loginPage().loginFrame();
+        }
+
+        if (e.getSource() == exit) {
+            this.dispose();
         }
     }
     public static void main(String args[]) {
