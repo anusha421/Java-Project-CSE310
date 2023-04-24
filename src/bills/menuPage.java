@@ -124,7 +124,7 @@ class ProductItemGUI extends JFrame {
         pmenu.setBounds(95,20,200,20);
         scrollPane.setBounds(25,70,250,250);
         qStock.setBounds(50,325,250,20);
-        price.setBounds(150,325,100,20);
+        price.setBounds(150,325,200,20);
         num.setBounds(50,375,150,20);
         callNum.setBounds(190,375,75,20);
         add.setBounds(70,450,140,30);
@@ -372,6 +372,7 @@ class ProductItemController {
                 CheckoutGUI checkoutGUI = new CheckoutGUI();
                 CheckoutController checkoutController = new CheckoutController(checkoutGUI,productDB,cart);
                 productItemGUI.close();
+                JOptionPane.showMessageDialog(null, "Once you SHOW your bill, the transaction will be final!", "Message", JOptionPane.INFORMATION_MESSAGE);
                 checkoutGUI.setVisible(true);
             }
         }
@@ -388,7 +389,7 @@ class ProductItemController {
             } else {
                 productItemGUI.setQStock("Stock : " + s);
             }
-            productItemGUI.setPrice("Price : $" + p.getPrice());
+            productItemGUI.setPrice("Price : Rs. " + p.getPrice());
         }
     }
 
@@ -419,7 +420,7 @@ class ProductItemController {
                     productItemGUI.setRow(id, p);
                 }
                 productItemGUI.setQStock("Stock : " + ss);
-                productItemGUI.setPrice("Price : $" + p.getPrice());
+                productItemGUI.setPrice("Price : Rs. " + p.getPrice());
                 productItemGUI.setTotalPrice("Total Price: " + cart.calculateTotalPrice());
             }
         }
@@ -532,7 +533,7 @@ class CheckoutController {
     class ShowListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             checkoutGUI.showDetail(cart.getAllDetail());
-            checkoutGUI.showCalculateTotalPrice("Total Price : $" + cart.calculateTotalPrice());
+            checkoutGUI.showCalculateTotalPrice("Total Price : Rs. " + cart.calculateTotalPrice());
         }
     }
 }
@@ -541,29 +542,29 @@ class ProductDB {
     ArrayList<Product> productList = new ArrayList<>();
 
     public ProductDB() {
-        productList.add(new Product("Apple",100,100));
-        productList.add(new Product("Avocado",100,70));
-        productList.add(new Product("Banana",100,20));
-        productList.add(new Product("Cherry",100,600));
-        productList.add(new Product("Coconut",100,50));
-        productList.add(new Product("Durian",100,450));
-        productList.add(new Product("Grape",100,150));
-        productList.add(new Product("Grapefruit",100,88));
-        productList.add(new Product("Guava",100,33));
-        productList.add(new Product("Honeydew Melon",100,172));
-        productList.add(new Product("Kiwi Fruit",100,40));
-        productList.add(new Product("Lemon",100,20));
-        productList.add(new Product("Lichee",100,105));
-        productList.add(new Product("Orange",100,25));
-        productList.add(new Product("Papaya",100,55));
-        productList.add(new Product("Passion Fruit",100,23));
-        productList.add(new Product("Pear",100,110));
-        productList.add(new Product("Persimmon",100,48));
-        productList.add(new Product("Pineapple",100,79));
-        productList.add(new Product("Solomon",1,1));
-        productList.add(new Product("Tangerine",100,22));
-        productList.add(new Product("Watermelon",100,310));
-        productList.add(new Product("Love Apple",100,28));
+        productList.add(new Product("Flour",100,1000));
+        productList.add(new Product("Chai Masala",100,50));
+        productList.add(new Product("Milk Powder",100,40));
+        productList.add(new Product("Butter",100,20));
+        productList.add(new Product("Cheese",100,30));
+        productList.add(new Product("Fresh Cream",100,40));
+        productList.add(new Product("Pepper",100,10));
+        productList.add(new Product("Turmeric",100,25));
+        productList.add(new Product("Saffron",100,1000));
+        productList.add(new Product("Dry Ginger",100,15));
+        productList.add(new Product("Groundnut",100,50));
+        productList.add(new Product("Mushroom",100,100));
+        productList.add(new Product("Wheat",100,1200));
+        productList.add(new Product("Dried Chilli",100,35));
+        productList.add(new Product("Rock salt",100,55));
+        productList.add(new Product("Sugar",100,120));
+        productList.add(new Product("Tamarind",100,22));
+        productList.add(new Product("Mustard Seeds",100,60));
+        productList.add(new Product("Cardamom",100,79));
+        productList.add(new Product("Rajma",1,85));
+        productList.add(new Product("Jeera",100,65));
+        productList.add(new Product("Dried Mango Powder",100,67));
+        productList.add(new Product("Heeng",100,100));
     }
 
     public Product getProduct(String name) {

@@ -163,7 +163,6 @@ class loginPage extends JFrame implements ActionListener {
                     JOptionPane.showMessageDialog(this, "Login Successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
                     this.dispose();
                     new userPage(rs).userFrame();
-//                    new ShoppingCart().main(Integer.toString(rs.getInt("cust_id")));
                     flag = 1;
                     clearForm();
                     break;

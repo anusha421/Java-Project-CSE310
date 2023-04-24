@@ -74,6 +74,7 @@ public class homePage extends JFrame implements ActionListener {
         if (e.getSource() == login) {
             this.dispose();
             new loginPage().loginFrame();
+            return;
         }
 
         if (e.getSource() == exit) {

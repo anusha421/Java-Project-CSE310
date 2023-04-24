@@ -44,7 +44,7 @@ public class prevBills {
             f.setSize(800,600);
             f.setResizable(false);
             f.setLocationRelativeTo(null);
-            f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+            f.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             f.setVisible(true);
             f.add(l);
             return;

@@ -193,7 +193,7 @@ class signupPage extends JFrame implements ActionListener  {
         }
 
         Statement stmt;
-        PreparedStatement pstmt;
+        PreparedStatement pstmt, pstmt2;
 
 
         // Form validation for name
@@ -202,7 +202,7 @@ class signupPage extends JFrame implements ActionListener  {
             JOptionPane.showMessageDialog(this, "Please Enter your Name!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        if(!nameText.matches("^[a-zA-Z]*$")) {
+        if(!nameText.matches("^[a-zA-Z ]*$")) {
             JOptionPane.showMessageDialog(this, "Name can only consist of Alphabets!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -292,17 +292,27 @@ class signupPage extends JFrame implements ActionListener  {
             JOptionPane.showMessageDialog(this, "Registration Successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
             clearForm();
             setVisible(false);
-
-            ResultSet rs2 = stmt.executeQuery("select * from customers where username = ?" + username);
-
-            new userPage(rs2).userFrame();
             DatabaseConnectivity.getDatabase().close();
         }
         catch (Exception ex) {
+            System.out.print(ex);
             JOptionPane.showMessageDialog(this, "Registration Error!", "Error", JOptionPane.ERROR_MESSAGE);
             clearForm();
             return;
         }
+
+        try {
+            String sql2 = ("select * from customers where username = ?");
+            pstmt2 = DatabaseConnectivity.getDatabase().prepareStatement(sql2);
+            pstmt2.setString(1, userText);
+            ResultSet rs2 = pstmt2.executeQuery();
+            rs2.next();
+            new userPage(rs2).userFrame();
+        }
+        catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+
     }
     void clearForm() {
         // clear input fields

@@ -14,7 +14,7 @@ import java.sql.Statement;
 import java.util.Arrays;
 
 public class userPage extends JFrame implements ActionListener {
-    JLabel label1;
+    JLabel label1, label2;
     JButton menu_btn, pre_bills, exit;
     JScrollPane scrollPane;
     static ResultSet rs;
@@ -50,6 +50,7 @@ public class userPage extends JFrame implements ActionListener {
         }
         catch(SQLException e) {
             this.dispose();
+            System.out.print(e);
             JOptionPane.showMessageDialog(this, "Error! Try again later", "Error", JOptionPane.ERROR_MESSAGE);
             new homePage().createFrame();
         }
@@ -79,6 +80,12 @@ public class userPage extends JFrame implements ActionListener {
 
         try {
             r = stmt.executeQuery("select timestamp from bills where cust = " + rs.getInt("cust_id") + " ORDER BY timestamp desc limit 1");
+            if(!r.next()) {
+                label2 = new JLabel("You haven't made any transacctions yet");
+            }
+            else {
+                label2 = new JLabel("Your last transaction was on " + r.getTimestamp(1));
+            }
         }
         catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Error!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -86,8 +93,6 @@ public class userPage extends JFrame implements ActionListener {
             throw new RuntimeException(ex);
         }
 
-        r.next();
-        JLabel label2 = new JLabel("Your last transaction was on " + r.getTimestamp(1));
         label2.setBounds(10, 50, 600, 30);
         label2.setForeground(Color.white);
         label2.setFont(f1);
